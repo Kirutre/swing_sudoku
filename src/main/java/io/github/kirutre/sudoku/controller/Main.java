@@ -1,4 +1,4 @@
-package io.github.kirutre.sudoku.main;
+package io.github.kirutre.sudoku.controller;
 
 import io.github.kirutre.sudoku.model.Sudoku;
 import io.github.kirutre.sudoku.view.Graphic;
