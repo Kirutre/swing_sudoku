@@ -1,7 +1,7 @@
 package io.github.kirutre.sudoku.controller;
 
 import io.github.kirutre.sudoku.model.Sudoku;
-import io.github.kirutre.sudoku.view.Graphic;
+import io.github.kirutre.sudoku.view.SudokuFrame;
 
 import java.util.List;
 
@@ -22,6 +22,6 @@ public class Main {
         Sudoku sudoku = new Sudoku(board);
         List<List<Integer>> grid = sudoku.getGrid();
 
-        Graphic graphic = new Graphic(grid);
+        SudokuFrame sudokuFrame = new SudokuFrame();
     }
 }

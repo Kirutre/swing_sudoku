@@ -1,13 +1,15 @@
 package io.github.kirutre.sudoku.model;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.BiPredicate;
 
 public class Sudoku {
     final private List<List<Integer>> grid;
     final private int gridSize = 9;
 
-    public Sudoku (int[][] board) {
+    public Sudoku(int[][] board) {
         grid = new ArrayList<>(gridSize);
 
         for (int[] row : board) {
@@ -17,11 +19,11 @@ public class Sudoku {
         solveSudoku();
     }
 
-    public List<List<Integer>> getGrid () {
+    public List<List<Integer>> getGrid() {
         return grid;
     }
 
-    private boolean solveSudoku () {
+    private boolean solveSudoku() {
         final Limit limits = new Limit(0, 0, gridSize);
 
         return travel((r, c) -> {
@@ -43,15 +45,15 @@ public class Sudoku {
         }, limits);
     }
 
-    private boolean isNumberValid (int row, int column, int value) {
+    private boolean isNumberValid(int row, int column, int value) {
         return !(isNumberInRow(row, value) || isNumberOnColumn(column, value) || isNumberOnQuadrant(row, column, value));
     }
 
-    private boolean isNumberInRow (int row, int value) {
+    private boolean isNumberInRow(int row, int value) {
         return grid.get(row).contains(value);
     }
 
-    private boolean isNumberOnColumn (int column, int value) {
+    private boolean isNumberOnColumn(int column, int value) {
         for (List<Integer> row : grid) {
             if (row.get(column).equals(value)) {
                 return true;
@@ -61,13 +63,13 @@ public class Sudoku {
         return false;
     }
 
-    private boolean isNumberOnQuadrant (int row, int column, int value) {
+    private boolean isNumberOnQuadrant(int row, int column, int value) {
         final Limit limits = getCurrentQuadrant(row, column);
 
         return !travel((r, c) -> grid.get(r).get(c) != value, limits);
     }
 
-    private Limit getCurrentQuadrant (int row, int column) {
+    private Limit getCurrentQuadrant(int row, int column) {
         final int quadrantSize = 3;
         final int minRow = (row / 3) * 3;
         final int minColumn = (column / 3) * 3;
@@ -75,7 +77,7 @@ public class Sudoku {
         return new Limit(minRow, minColumn, quadrantSize);
     }
 
-    private boolean travel (BiPredicate<Integer, Integer> function, Limit limits) {
+    private boolean travel(BiPredicate<Integer, Integer> function, Limit limits) {
         final int maxRow = limits.minRow() + limits.size();
         final int maxColumn = limits.minColumn() + limits.size();
 
