@@ -1,7 +1,5 @@
 package io.github.kirutre.sudoku.model;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.*;
 import java.util.function.BiPredicate;
 
@@ -9,7 +7,7 @@ public class Sudoku {
     final private List<List<Integer>> grid;
     final private int gridSize = 9;
 
-    public Sudoku (int[] @NotNull [] board) {
+    public Sudoku (int[][] board) {
         grid = new ArrayList<>(gridSize);
 
         for (int[] row : board) {
@@ -24,6 +22,8 @@ public class Sudoku {
     }
 
     private boolean solveSudoku () {
+        final Limit limits = new Limit(0, 0, gridSize);
+
         return travel((r, c) -> {
             if (grid.get(r).get(c) == 0) {
                 for (int value = 1; value <= gridSize; value++) {
@@ -40,7 +40,7 @@ public class Sudoku {
                 return false;
             }
             return true;
-        }, 0, 0, gridSize, gridSize);
+        }, limits);
     }
 
     private boolean isNumberValid (int row, int column, int value) {
@@ -62,26 +62,25 @@ public class Sudoku {
     }
 
     private boolean isNumberOnQuadrant (int row, int column, int value) {
-        final int cellSize = 3;
-        final QuadrantLimit limits = getCurrentQuadrant(row, column);
+        final Limit limits = getCurrentQuadrant(row, column);
 
-        return !travel((r, c) -> {
-            return r < limits.minRow() || r >= limits.minRow() + cellSize ||
-                    c < limits.minColumn() || c >= limits.minColumn() + cellSize ||
-                    grid.get(r).get(c) != value;
-        }, limits.minRow(), limits.minColumn(), limits.minRow() + cellSize, limits.minColumn() + cellSize);
+        return !travel((r, c) -> grid.get(r).get(c) != value, limits);
     }
 
-    private QuadrantLimit getCurrentQuadrant (int row, int column) {
+    private Limit getCurrentQuadrant (int row, int column) {
+        final int quadrantSize = 3;
         final int minRow = (row / 3) * 3;
         final int minColumn = (column / 3) * 3;
 
-        return new QuadrantLimit(minRow, minColumn);
+        return new Limit(minRow, minColumn, quadrantSize);
     }
 
-    private boolean travel (BiPredicate<Integer, Integer> function, int starRow, int starColumn, int endRow, int endColumn) {
-        for (int row = starRow; row < endRow; row++) {
-            for (int column = starColumn; column < endColumn; column++) {
+    private boolean travel (BiPredicate<Integer, Integer> function, Limit limits) {
+        final int maxRow = limits.minRow() + limits.size();
+        final int maxColumn = limits.minColumn() + limits.size();
+
+        for (int row = limits.minRow(); row < maxRow; row++) {
+            for (int column = limits.minColumn(); column < maxColumn; column++) {
                 if (!function.test(row, column)) {
                     return false;
                 }
