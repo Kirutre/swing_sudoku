@@ -1,7 +1,6 @@
 package io.github.kirutre.sudoku.view;
 
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import java.awt.*;
 import java.nio.file.DirectoryNotEmptyException;
 
@@ -70,6 +69,9 @@ public class SudokuBoard extends JPanel {
                 cell.setForeground(textFieldForegroundColor);
                 cell.setFont(font);
                 cell.setHorizontalAlignment(JTextField.CENTER);
+                cell.setBorder(BorderFactory.createLineBorder(panelBackgroundColor, 1));
+                cell.setEditable(false);
+                cell.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
                 cellsTextField[row][column] = cell;
 

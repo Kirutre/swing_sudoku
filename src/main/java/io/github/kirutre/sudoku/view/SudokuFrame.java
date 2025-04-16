@@ -1,23 +1,27 @@
 package io.github.kirutre.sudoku.view;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 public class SudokuFrame extends JFrame {
     private JPanel backgroundPanel;
     private JLabel titleLabel;
-    private SudokuBoard sudokuBoard;
+
+    private SudokuBoard sudokuBoard = new SudokuBoard();
 
     public SudokuFrame() {
-        setContentPane(backgroundPanel);
+        this.setContentPane(backgroundPanel);
 
         this.setTitle("Sudoku by Kirutre");
         this.setLocationRelativeTo(null);
 
-        // call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        backgroundPanel.add(sudokuBoard, BorderLayout.CENTER);
 
-        addWindowListener(new WindowAdapter() {
+        // call onCancel() when cross is clicked
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+
+        this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 onCancel();
             }
