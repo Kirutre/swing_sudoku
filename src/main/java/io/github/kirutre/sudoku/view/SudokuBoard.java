@@ -2,7 +2,7 @@ package io.github.kirutre.sudoku.view;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.awt.Color;
+import java.awt.*;
 
 public class SudokuBoard extends JPanel {
     private JTextField[][] cellsTextField;
@@ -23,26 +23,27 @@ public class SudokuBoard extends JPanel {
     private Color textFieldForegroundColorSelected;
 
     public SudokuBoard() {
+        startComponents();
     }
 
     private void startComponents() {
         cellsTextField = new JTextField[9][9];
 
-        textFieldWidth = 35;
+        textFieldWidth = 36;
         textFieldHigh = 36;
         textFieldMargin = 4;
         textFieldFontSize = 27;
 
-        panelBackgroundColor = Color.BLACK;
+        panelBackgroundColor = new Color(28, 28, 120);
         textFieldBackgroundColor = Color.WHITE;
         textFieldForegroundColor = Color.BLACK;
-        textFieldBackgroundColorHighlighted = Color.WHITE;
+        textFieldBackgroundColorHighlighted = new Color(14,14,29);
         textFieldForegroundColorHighlighted = Color.BLACK;
-        textFieldBackgroundColorSelected = Color.WHITE;
+        textFieldBackgroundColorSelected = new Color(40,50,150);
         textFieldForegroundColorSelected = Color.BLACK;
     }
 
-    private void createSudokuBoard() {
+    public void createSudokuBoard() {
         final int cellsAmount = 9;
         final int divisorsAmount = 4;
 

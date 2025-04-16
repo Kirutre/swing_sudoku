@@ -13,6 +13,9 @@ public class SudokuFrame extends JFrame {
         this.setSize(540, 420);
         this.setResizable(false);
         this.setTitle("Sudoku by Kirutre");
+        this.setLocationRelativeTo(null);
+
+        startComponents();
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -27,5 +30,13 @@ public class SudokuFrame extends JFrame {
     private void onCancel() {
         // add your code here if necessary
         dispose();
+    }
+
+    private void startComponents() {
+        final SudokuBoard sudokuBoard = new SudokuBoard();
+
+        sudokuBoard.setVisible(true);
+
+        sudokuBoard.createSudokuBoard();
     }
 }

@@ -19,10 +19,10 @@ public class Main {
                 {5, 0, 8, 6, 1, 0, 0, 0, 0}
         };
 
-        Sudoku sudoku = new Sudoku(board);
+        final Sudoku sudoku = new Sudoku(board);
         List<List<Integer>> grid = sudoku.getGrid();
 
-        SudokuFrame sudokuFrame = new SudokuFrame();
+        final SudokuFrame sudokuFrame = new SudokuFrame();
 
         sudokuFrame.setVisible(true);
     }
