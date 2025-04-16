@@ -3,6 +3,7 @@ package io.github.kirutre.sudoku.view;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import java.awt.*;
+import java.nio.file.DirectoryNotEmptyException;
 
 public class SudokuBoard extends JPanel {
     private JTextField[][] cellsTextField;
@@ -24,6 +25,7 @@ public class SudokuBoard extends JPanel {
 
     public SudokuBoard() {
         startComponents();
+        createSudokuBoard();
     }
 
     private void startComponents() {
@@ -43,15 +45,36 @@ public class SudokuBoard extends JPanel {
         textFieldForegroundColorSelected = Color.BLACK;
     }
 
-    public void createSudokuBoard() {
+    private void createSudokuBoard() {
         final int cellsAmount = 9;
-        final int divisorsAmount = 4;
 
-        final int sudokuBoardWidth = textFieldWidth * cellsAmount + textFieldMargin * divisorsAmount;
-        final int sudokuBoardHigh = textFieldHigh * cellsAmount + textFieldMargin * divisorsAmount;
+        final int sudokuBoardWidth = (textFieldWidth * cellsAmount) + (textFieldMargin * textFieldMargin);
+        final int sudokuBoardHigh = (textFieldHigh * cellsAmount) + (textFieldMargin * textFieldMargin);
 
-        this.setLayout(null);
-        this.setSize(sudokuBoardWidth, sudokuBoardHigh);
+
+        this.setLayout(new GridLayout(cellsAmount, cellsAmount, textFieldMargin, textFieldMargin));
+        this.setPreferredSize(new Dimension(sudokuBoardWidth, sudokuBoardHigh));
         this.setBackground(panelBackgroundColor);
+
+        createCells();
+    }
+
+    private void createCells() {
+        Font font = new Font("Microsoft JhengHei UI", Font.BOLD, textFieldFontSize);
+
+        for (int row = 0; row < cellsTextField.length; row++) {
+            for (int column = 0; column < cellsTextField[row].length; column++) {
+                JTextField cell = new JTextField();
+
+                cell.setBackground(textFieldBackgroundColor);
+                cell.setForeground(textFieldForegroundColor);
+                cell.setFont(font);
+                cell.setHorizontalAlignment(JTextField.CENTER);
+
+                cellsTextField[row][column] = cell;
+
+                this.add(cell);
+            }
+        }
     }
 }

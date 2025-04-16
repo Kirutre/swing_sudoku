@@ -6,16 +6,13 @@ import java.awt.event.*;
 public class SudokuFrame extends JFrame {
     private JPanel backgroundPanel;
     private JLabel titleLabel;
+    private SudokuBoard sudokuBoard;
 
     public SudokuFrame() {
         setContentPane(backgroundPanel);
 
-        this.setSize(540, 420);
-        this.setResizable(false);
         this.setTitle("Sudoku by Kirutre");
         this.setLocationRelativeTo(null);
-
-        startComponents();
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -25,18 +22,15 @@ public class SudokuFrame extends JFrame {
                 onCancel();
             }
         });
+
+        pack();
+
+        this.setResizable(false);
+        this.setVisible(true);
     }
 
     private void onCancel() {
         // add your code here if necessary
         dispose();
-    }
-
-    private void startComponents() {
-        final SudokuBoard sudokuBoard = new SudokuBoard();
-
-        sudokuBoard.setVisible(true);
-
-        sudokuBoard.createSudokuBoard();
     }
 }
