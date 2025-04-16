@@ -23,5 +23,7 @@ public class Main {
         List<List<Integer>> grid = sudoku.getGrid();
 
         SudokuFrame sudokuFrame = new SudokuFrame();
+
+        sudokuFrame.setVisible(true);
     }
 }
