@@ -2,13 +2,13 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="io.github.kirutre.sudoku.view.SudokuFrame">
   <grid id="cbd77" binding="backgroundPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="5" y="10" width="933" height="669"/>
+      <xy x="5" y="10" width="1024" height="720"/>
     </constraints>
     <properties>
       <background color="-15856099"/>
-      <maximumSize width="500" height="400"/>
-      <minimumSize width="500" height="400"/>
-      <preferredSize width="500" height="400"/>
+      <maximumSize width="520" height="400"/>
+      <minimumSize width="520" height="400"/>
+      <preferredSize width="340" height="370"/>
     </properties>
     <border type="none"/>
     <children>

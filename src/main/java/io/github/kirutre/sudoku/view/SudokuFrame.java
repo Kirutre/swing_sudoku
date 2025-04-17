@@ -8,33 +8,34 @@ public class SudokuFrame extends JFrame {
     private JPanel backgroundPanel;
     private JLabel titleLabel;
 
-    private SudokuBoard sudokuBoard = new SudokuBoard();
+    private SudokuBoard sudokuBoard;
 
     public SudokuFrame() {
-        this.setContentPane(backgroundPanel);
+        setContentPane(backgroundPanel);
+        setTitle("Sudoku by Kirutre");
+        setLocationRelativeTo(null);
 
-        this.setTitle("Sudoku by Kirutre");
-        this.setLocationRelativeTo(null);
+        sudokuBoard = new SudokuBoard();
 
         backgroundPanel.add(sudokuBoard, BorderLayout.CENTER);
 
-        // call onCancel() when cross is clicked
-        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-
-        this.addWindowListener(new WindowAdapter() {
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 onCancel();
             }
         });
 
         pack();
-
-        this.setResizable(false);
-        this.setVisible(true);
+        setResizable(false);
+        setVisible(true);
     }
 
     private void onCancel() {
-        // add your code here if necessary
         dispose();
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(SudokuFrame::new);
     }
 }
