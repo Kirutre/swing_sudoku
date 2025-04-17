@@ -1,6 +1,7 @@
 package io.github.kirutre.sudoku.view;
 
 import javax.swing.*;
+import javax.swing.text.Caret;
 import java.awt.*;
 
 public class SudokuBoard extends JPanel {
@@ -45,20 +46,23 @@ public class SudokuBoard extends JPanel {
                 cell.setBackground(textFieldBackgroundColor);
                 cell.setForeground(textFieldForegroundColor);
                 cell.setFont(font);
-                cell.setEditable(false);
+                cell.setCaret(new InvisibleCaret());
                 cell.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 cell.setBorder(BorderFactory.createLineBorder(panelBackgroundColor, 1));
                 cell.setHorizontalAlignment(JTextField.CENTER);
                 cell.setVisible(true);
+
                 cellsTextField[row][column] = cell;
 
                 x += textFieldWidth;
+
                 if ((column + 1) % 3 == 0 && column < 8) {
                     x += textFieldMargin;
                 }
             }
             x = textFieldMargin;
             y += textFieldHigh;
+            
             if ((row + 1) % 3 == 0 && row < 8) {
                 y += textFieldMargin;
             }

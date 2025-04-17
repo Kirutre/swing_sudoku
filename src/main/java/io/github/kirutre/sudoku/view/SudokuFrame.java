@@ -34,8 +34,4 @@ public class SudokuFrame extends JFrame {
     private void onCancel() {
         dispose();
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(SudokuFrame::new);
-    }
 }
