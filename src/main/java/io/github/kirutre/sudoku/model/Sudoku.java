@@ -7,7 +7,7 @@ import java.util.function.BiPredicate;
 
 public class Sudoku {
     final private List<List<Integer>> grid;
-    final private int gridSize = 9;
+    private static final int gridSize = 9;
 
     public Sudoku(int[][] board) {
         grid = new ArrayList<>(gridSize);

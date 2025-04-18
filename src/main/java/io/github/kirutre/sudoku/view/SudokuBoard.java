@@ -1,19 +1,20 @@
 package io.github.kirutre.sudoku.view;
 
 import javax.swing.*;
-import javax.swing.text.Caret;
 import java.awt.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class SudokuBoard extends JPanel {
-    private JTextField[][] cellsTextField;
-    private int textFieldWidth = 36;
-    private int textFieldHigh = 36;
-    private int textFieldMargin = 4;
-    private int textFieldFontSize = 27;
-    private Color panelBackgroundColor = new Color(28, 28, 120);
-    private Color textFieldBackgroundColor = Color.WHITE;
-    private Color textFieldForegroundColor = Color.BLACK;
-    private final int cellsAmount = 9;
+    private final List<List<Cell>> cellsTextField = new ArrayList<>();
+
+    private static final int textFieldMargin = 4;
+
+    private static final int cellsAmount = 9;
+    private static final int cellSize = 36;
+
+    private static final Color panelBackgroundColor = new Color(28, 28, 120);
+    private final CellColors colors = new CellColors(Color.WHITE, Color.BLACK, panelBackgroundColor);
 
     public SudokuBoard() {
         setLayout(null);
@@ -21,51 +22,40 @@ public class SudokuBoard extends JPanel {
     }
 
     private void createSudokuBoard() {
-        final int sideSize = (textFieldWidth * cellsAmount) + (textFieldMargin * 10); // Margen inicial y entre bloques
+        final int sideSize = (cellSize * cellsAmount) + (textFieldMargin * (cellsAmount + 1));
+
         setPreferredSize(new Dimension(sideSize, sideSize));
         setBackground(panelBackgroundColor);
+        setBounds(0, 0, sideSize, sideSize);
+
         createCells();
-        setBounds(0, 0, getPreferredSize().width, getPreferredSize().height); // Establecer bounds después de calcular el tamaño
     }
 
     private void createCells() {
-        Font font = new Font("Microsoft JhengHei UI", Font.BOLD, textFieldFontSize);
+        for (int row = 0; row < cellsAmount; row++) {
+            final List<Cell> cellsRow = new ArrayList<>();
 
-        cellsTextField = new JTextField[cellsAmount][cellsAmount];
+            for (int column = 0; column < cellsAmount; column++) {
+                final Point position = calculatePosition(row, column);
 
-        int x = textFieldMargin;
-        int y = textFieldMargin;
-
-        for (int row = 0; row < cellsTextField.length; row++) {
-            for (int column = 0; column < cellsTextField[row].length; column++) {
-                JTextField cell = new JTextField();
+                final Cell cell = new Cell(colors, position);
 
                 add(cell);
 
-                cell.setBounds(x, y, textFieldWidth, textFieldHigh);
-                cell.setBackground(textFieldBackgroundColor);
-                cell.setForeground(textFieldForegroundColor);
-                cell.setFont(font);
-                cell.setCaret(new InvisibleCaret());
-                cell.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                cell.setBorder(BorderFactory.createLineBorder(panelBackgroundColor, 1));
-                cell.setHorizontalAlignment(JTextField.CENTER);
-                cell.setVisible(true);
-
-                cellsTextField[row][column] = cell;
-
-                x += textFieldWidth;
-
-                if ((column + 1) % 3 == 0 && column < 8) {
-                    x += textFieldMargin;
-                }
+                cellsRow.add(cell);
             }
-            x = textFieldMargin;
-            y += textFieldHigh;
-            
-            if ((row + 1) % 3 == 0 && row < 8) {
-                y += textFieldMargin;
-            }
+
+            cellsTextField.add(cellsRow);
         }
+    }
+
+    private Point calculatePosition(int row, int column) {
+        int rowQuadrant = row / 3;
+        int columnQuadrant = column / 3;
+
+        int x = textFieldMargin + (column * cellSize) + (columnQuadrant * textFieldMargin);
+        int y = textFieldMargin + (row * cellSize) + (rowQuadrant * textFieldMargin);
+
+        return new Point(x, y);
     }
 }
