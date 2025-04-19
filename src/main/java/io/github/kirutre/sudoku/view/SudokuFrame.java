@@ -1,8 +1,11 @@
 package io.github.kirutre.sudoku.view;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import java.awt.BorderLayout;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
 
 public class SudokuFrame extends JFrame {
     private JPanel backgroundPanel;

@@ -6,21 +6,23 @@ import java.util.Arrays;
 import java.util.function.BiPredicate;
 
 public class Sudoku {
-    final private List<List<Integer>> grid;
+    private final List<List<Integer>> grid = new ArrayList<>(gridSize);
+
     private static final int gridSize = 9;
 
     public Sudoku(int[][] board) {
-        grid = new ArrayList<>(gridSize);
-
-        for (int[] row : board) {
-            grid.add(new ArrayList<>(Arrays.stream(row).boxed().toList()));
-        }
-
+        setSudoku(board);
         solveSudoku();
     }
 
     public List<List<Integer>> getGrid() {
         return grid;
+    }
+
+    private void setSudoku(int[][] board) {
+        for (int[] row : board) {
+            grid.add(new ArrayList<>(Arrays.stream(row).boxed().toList()));
+        }
     }
 
     private boolean solveSudoku() {
@@ -45,15 +47,15 @@ public class Sudoku {
         }, limits);
     }
 
-    private boolean isNumberValid(int row, int column, int value) {
+    private boolean isNumberValid(final int row, final int column, final int value) {
         return !(isNumberInRow(row, value) || isNumberOnColumn(column, value) || isNumberOnQuadrant(row, column, value));
     }
 
-    private boolean isNumberInRow(int row, int value) {
+    private boolean isNumberInRow(final int row, final int value) {
         return grid.get(row).contains(value);
     }
 
-    private boolean isNumberOnColumn(int column, int value) {
+    private boolean isNumberOnColumn(final int column, final int value) {
         for (List<Integer> row : grid) {
             if (row.get(column).equals(value)) {
                 return true;
@@ -63,13 +65,13 @@ public class Sudoku {
         return false;
     }
 
-    private boolean isNumberOnQuadrant(int row, int column, int value) {
+    private boolean isNumberOnQuadrant(final int row, final int column, final int value) {
         final Limit limits = getCurrentQuadrant(row, column);
 
         return !travel((r, c) -> grid.get(r).get(c) != value, limits);
     }
 
-    private Limit getCurrentQuadrant(int row, int column) {
+    private Limit getCurrentQuadrant(final int row, final int column) {
         final int quadrantSize = 3;
         final int minRow = (row / 3) * 3;
         final int minColumn = (column / 3) * 3;

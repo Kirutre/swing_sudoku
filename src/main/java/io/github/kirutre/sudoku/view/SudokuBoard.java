@@ -1,9 +1,15 @@
 package io.github.kirutre.sudoku.view;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.BorderFactory;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.IntStream;
 
 public class SudokuBoard extends JPanel {
     private final List<List<Cell>> cellsTextField = new ArrayList<>();
@@ -13,8 +19,14 @@ public class SudokuBoard extends JPanel {
     private static final int cellsAmount = 9;
     private static final int cellSize = 36;
 
-    private static final Color panelBackgroundColor = new Color(28, 28, 120);
-    private final CellColors colors = new CellColors(Color.WHITE, Color.BLACK, panelBackgroundColor);
+    private static final Color panelBackgroundColor = new Color(20,20,60);
+    private static final Color cellForegroundColor = new Color(58,4,0);
+    private static final CellColor cellColor = new CellColor(Color.WHITE, cellForegroundColor, panelBackgroundColor);
+
+    private static final Color selectedCellBackground = new Color(0,57,104);
+    private static final CellColor selectedCellColor = new CellColor(selectedCellBackground, Color.WHITE, Color.WHITE);
+
+    private static final Color highlightedCellBackground = new Color(219,242,244);
 
     public SudokuBoard() {
         setLayout(null);
@@ -33,29 +45,75 @@ public class SudokuBoard extends JPanel {
 
     private void createCells() {
         for (int row = 0; row < cellsAmount; row++) {
-            final List<Cell> cellsRow = new ArrayList<>();
+            List<Cell> cellsRow = new ArrayList<>();
 
             for (int column = 0; column < cellsAmount; column++) {
-                final Point position = calculatePosition(row, column);
+                Position position = calculatePosition(row, column);
 
-                final Cell cell = new Cell(colors, position);
+                Cell cell = new Cell(cellColor, position);
 
                 add(cell);
 
                 cellsRow.add(cell);
+
+                eventHandling(cell);
             }
 
             cellsTextField.add(cellsRow);
         }
     }
 
-    private Point calculatePosition(int row, int column) {
+    private Position calculatePosition(int row, int column) {
         int rowQuadrant = row / 3;
         int columnQuadrant = column / 3;
 
         int x = textFieldMargin + (column * cellSize) + (columnQuadrant * textFieldMargin);
         int y = textFieldMargin + (row * cellSize) + (rowQuadrant * textFieldMargin);
 
-        return new Point(x, y);
+        return new Position(x, y);
+    }
+
+    private void eventHandling(Cell cell) {
+        MouseAdapter event = new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                cellPressed(cell);
+            }
+        };
+
+        cell.addMouseListener(event);
+    }
+
+    private void cellPressed(Cell cell) {
+        Optional<Position> coordinates = getCellCoordinates(cell);
+
+        coordinates.ifPresent(selectedCellCoordinates -> setCellColors(cell, selectedCellCoordinates));
+    }
+
+    private void setCellColors(Cell cell, Position cellCoordinates) {
+        for (int row = 0; row < cellsAmount; row++) {
+            Cell currentCell = cellsTextField.get(row).get(cellCoordinates.y());
+
+            currentCell.setBackground(highlightedCellBackground);
+        }
+
+        for (int column = 0; column < cellsAmount; column++) {
+            Cell currentCell = cellsTextField.get(cellCoordinates.x()).get(column);
+
+            currentCell.setBackground(highlightedCellBackground);
+        }
+
+        cell.setBackground(selectedCellColor.background());
+        cell.setForeground(selectedCellColor.foreground());
+        cell.setBorder(BorderFactory.createLineBorder(selectedCellColor.margin(), 2));
+    }
+
+    private Optional<Position> getCellCoordinates(Cell cell) {
+        return IntStream.range(0, cellsAmount)
+                .boxed()
+                .flatMap(row -> IntStream.range(0, cellsAmount)
+                        .filter(column -> cellsTextField.get(row).get(column).equals(cell))
+                        .mapToObj(column -> new Position(row, column)))
+                .findFirst();
     }
 }
