@@ -1,9 +1,14 @@
 package io.github.kirutre.sudoku.view;
 
+import io.github.kirutre.sudoku.model.Limit;
+import io.github.kirutre.sudoku.model.Quadrant;
+
 import javax.swing.JPanel;
 import javax.swing.BorderFactory;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -11,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-public class SudokuBoard extends JPanel {
+public class SudokuBoard extends JPanel implements Quadrant<Cell> {
     private final List<List<Cell>> cellsTextField = new ArrayList<>();
 
     private static final int textFieldMargin = 4;
@@ -74,14 +79,26 @@ public class SudokuBoard extends JPanel {
     }
 
     private void eventHandling(Cell cell) {
-        MouseAdapter event = new MouseAdapter() {
+        MouseAdapter mouseEvent = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 cellPressed(cell);
             }
         };
 
-        cell.addMouseListener(event);
+        KeyAdapter keyEvent = new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyChar() >= '1' && e.getKeyChar() <= '9') {
+                    cell.setText(String.valueOf(e.getKeyChar()));
+                } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
+                    cell.setText("");
+                }
+            }
+        };
+
+        cell.addMouseListener(mouseEvent);
+        cell.addKeyListener(keyEvent);
     }
 
     private void cellPressed(Cell cell) {
@@ -91,6 +108,14 @@ public class SudokuBoard extends JPanel {
     }
 
     private void setCellColors(Cell cell, Position cellCoordinates) {
+        travel((r, c) -> {
+            cellsTextField.get(r).get(c).setBackground(cellColor.background());
+            cellsTextField.get(r).get(c).setForeground(cellColor.foreground());
+            cellsTextField.get(r).get(c).setBorder(BorderFactory.createLineBorder(cellColor.margin(), 1));
+            return true;
+        }, new Limit(0, 0, cellsAmount));
+
+
         for (int row = 0; row < cellsAmount; row++) {
             Cell currentCell = cellsTextField.get(row).get(cellCoordinates.y());
 
@@ -102,6 +127,13 @@ public class SudokuBoard extends JPanel {
 
             currentCell.setBackground(highlightedCellBackground);
         }
+
+        final Limit quadrantLimits = getCurrentQuadrant(cellCoordinates.x(), cellCoordinates.y());
+
+        travel((r, c) -> {
+            cellsTextField.get(r).get(c).setBackground(highlightedCellBackground);
+            return true;
+        }, quadrantLimits);
 
         cell.setBackground(selectedCellColor.background());
         cell.setForeground(selectedCellColor.foreground());
