@@ -2,6 +2,7 @@ package io.github.kirutre.sudoku.view;
 
 import io.github.kirutre.sudoku.model.Limit;
 import io.github.kirutre.sudoku.model.Quadrant;
+import io.github.kirutre.sudoku.model.Sudoku;
 
 import javax.swing.JPanel;
 import javax.swing.BorderFactory;
@@ -147,5 +148,21 @@ public class SudokuBoard extends JPanel implements Quadrant<Cell> {
                         .filter(column -> cellsTextField.get(row).get(column).equals(cell))
                         .mapToObj(column -> new Position(row, column)))
                 .findFirst();
+    }
+
+    public void generateSudoku() {
+        Sudoku sudoku = new Sudoku();
+
+        sudoku.generateSudoku();
+
+        List<List<Integer>> grid = sudoku.getGrid();
+
+        for (int i = 0; i < cellsAmount; i++) {
+            for (int j = 0; j < cellsAmount; j++) {
+                if (grid.get(i).get(j) != 0) {
+                    cellsTextField.get(i).get(j).setText(String.valueOf(grid.get(i).get(j)));
+                }
+            }
+        }
     }
 }
